@@ -10,7 +10,7 @@ interface TodoDao {
     @Query("SELECT * FROM Todo")
     fun getAll(): List<Todo>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun insert(todo: Todo)
 
     @Delete

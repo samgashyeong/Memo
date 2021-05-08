@@ -21,7 +21,7 @@ class  DataAdapter(val DataList: List<Todo>): RecyclerView.Adapter<DataAdapter.M
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         //ex)holder.(홀더클래스변수).text = DataList[position].name
         holder.numTv.text = DataList[position].id.toString()
-        holder.workTv.text = DataList[position].title
+        holder.workTv.text = DataList[position].title.toString()
     }
     override fun getItemCount() = DataList.size
 

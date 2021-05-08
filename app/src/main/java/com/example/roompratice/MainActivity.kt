@@ -10,45 +10,37 @@ import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
+    var list = mutableListOf<Todo>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+
         binding = DataBindingUtil.setContentView(
             this,
             R.layout.activity_main
         )
+        var db = Room.databaseBuilder(
+                applicationContext,
+                AppDatabase::class.java, "database-name"
+        ).allowMainThreadQueries().build()
 
+        val savedContacts = db!!.todoDao().getAll()
+        if(savedContacts.isNotEmpty()){
+            list.addAll(savedContacts)
+        }
 
-        val layoutManager = LinearLayoutManager(this)
-        binding.recycle.setLayoutManager(layoutManager)
-
-        loadData()
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "database-name"
-        ).build()
+        val adapter = DataAdapter(list)
+        binding.recycle.adapter = adapter
         binding.button.setOnClickListener {
-            GlobalScope.launch(Dispatchers.IO) {
                 db.todoDao().insert(Todo(1, binding.editText.text.toString()))
-            }
-            loadData()
+                println(db)
+                list.add(Todo(1, binding.editText.text.toString()))
+
+                    adapter.notifyDataSetChanged()
+
         }
 
-    }
-
-    fun loadData(){
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "database-name"
-        ).build()
-        GlobalScope.launch(Dispatchers.IO){
-            val list : List<Todo> = db.todoDao().getAll()
-
-            withContext(Dispatchers.Main){
-                val adapter = DataAdapter(list)
-                binding.recycle.adapter = adapter
-            }
-        }
     }
 }
