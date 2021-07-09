@@ -11,7 +11,7 @@ interface TodoDao {
     fun getAll(): List<Todo>
 
     @Insert
-    fun insert(todo: Todo)
+    fun insert(vararg todo: Todo)
 
     @Delete
     fun delete(todo: Todo)
